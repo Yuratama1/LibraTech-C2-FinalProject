@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Peminjaman - LibraTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-8 min-h-screen">
+    
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-4xl font-bold text-[#1B4D3E]">📋 Data Peminjaman</h1>
+                <p class="text-gray-500 mt-2">Kelola sirkulasi buku dan jadwal pengembalian.</p>
+            </div>
+            <a href="/" class="bg-white text-gray-600 hover:text-[#1B4D3E] hover:bg-gray-50 px-6 py-3 rounded-xl shadow-sm border border-gray-200 font-semibold transition flex items-center gap-2">
+                <span>🏠</span> Kembali ke Dashboard
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1">
+                <div class="bg-white p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 sticky top-8">
+                    <h2 class="text-xl font-bold text-[#1B4D3E] mb-6 flex items-center gap-3">
+                        <span class="bg-orange-100 text-orange-600 p-2 rounded-lg">✍️</span> 
+                        Catat Peminjaman
+                    </h2>
+                    
+                    <form action="/borrowings/add" method="POST" class="flex flex-col gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">ID Buku</label>
+                            <input type="number" name="book_id" placeholder="Contoh: 1" required 
+                                class="w-full bg-gray-50 p-4 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#D97706] outline-none transition font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Nama Mahasiswa</label>
+                            <input type="text" name="borrower_name" placeholder="Nama Lengkap" required 
+                                class="w-full bg-gray-50 p-4 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#D97706] outline-none transition font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">NIM</label>
+                            <input type="text" name="borrower_nim" placeholder="Nomor Induk" required 
+                                class="w-full bg-gray-50 p-4 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#D97706] outline-none transition font-medium">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Tgl Pinjam</label>
+                                <input type="date" name="borrow_date" required 
+                                    class="w-full bg-gray-50 p-3 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#D97706] outline-none transition text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Tgl Kembali</label>
+                                <input type="date" name="return_date" required 
+                                    class="w-full bg-gray-50 p-3 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#D97706] outline-none transition text-sm">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="mt-4 w-full bg-[#D97706] hover:bg-[#b46105] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-200 transition transform hover:-translate-y-1">
+                            Simpan Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-[#1B4D3E]">
+                        <h3 class="font-bold text-white text-lg">Riwayat Transaksi</h3>
+                        <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">Total: <%= borrowings.length %></span>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider font-bold">
+                                <tr>
+                                    <th class="p-5">Buku Dipinjam</th>
+                                    <th class="p-5">Peminjam</th>
+                                    <th class="p-5">Tanggal</th>
+                                    <th class="p-5 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <% if(borrowings.length > 0) { %>
+                                    <% borrowings.forEach(function(b) { %>
+                                    <tr class="hover:bg-orange-50 transition group">
+                                        <td class="p-5">
+                                            <div class="font-bold text-[#1B4D3E] text-base">
+                                                <%= b.book_title ? b.book_title : 'ID Buku: ' + b.book_id %>
+                                            </div>
+                                            <div class="text-xs text-gray-400 mt-1">ID Ref: #<%= b.id %></div>
+                                        </td>
+
+                                        <td class="p-5">
+                                            <div class="font-semibold text-gray-700"><%= b.borrower_name %></div>
+                                            <div class="text-xs text-gray-500 bg-gray-100 inline-block px-2 py-0.5 rounded mt-1">
+                                                <%= b.borrower_nim %>
+                                            </div>
+                                        </td>
+
+                                        <td class="p-5 text-sm text-gray-600">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <span class="text-green-600">⬇</span> <%= new Date(b.borrow_date).toLocaleDateString() %>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-red-400">⬆</span> <%= new Date(b.return_date).toLocaleDateString() %>
+                                            </div>
+                                        </td>
+
+                                        <td class="p-5 text-center">
+                                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
+                                                Sedang Dipinjam
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="p-10 text-center text-gray-400 italic flex flex-col items-center">
+                                            <span class="text-4xl mb-2">📂</span>
+                                            Belum ada data peminjaman tercatat.
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

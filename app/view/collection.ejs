@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi Buku - LibraTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans p-8 min-h-screen">
+    
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-4xl font-bold text-[#1B4D3E]">📚 Koleksi Pustaka</h1>
+                <p class="text-gray-500 mt-2">Daftar lengkap seluruh buku yang tersedia di perpustakaan.</p>
+            </div>
+            
+            <a href="/" class="group bg-white text-gray-600 hover:text-[#1B4D3E] hover:border-[#1B4D3E] px-6 py-3 rounded-xl shadow-sm border border-gray-200 font-semibold transition-all duration-300 flex items-center gap-3">
+                <span class="group-hover:-translate-x-1 transition-transform duration-300">⬅️</span> 
+                Kembali ke Dashboard
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <% if(books.length > 0) { %>
+                <% books.forEach(function(book) { %>
+                <div class="bg-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition duration-300 border border-gray-100 flex flex-col h-full">
+                    
+                    <div class="h-40 bg-[#1B4D3E] flex items-center justify-center relative overflow-hidden group">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+                        <span class="text-6xl drop-shadow-lg group-hover:scale-110 transition duration-300">📖</span>
+                    </div>
+
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-1 rounded-lg">
+                                <%= book.category %>
+                            </span>
+                        </div>
+
+                        <h3 class="font-bold text-lg text-[#1B4D3E] mb-1 line-clamp-2 leading-tight">
+                            <%= book.title %>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-4 font-medium"><%= book.author %></p>
+                        
+                        <div class="mt-auto"></div>
+
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-2">
+                            <span class="text-xs font-bold <%= book.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> px-3 py-1.5 rounded-full">
+                                Stok: <%= book.stock %>
+                            </span>
+                            
+                            <div class="flex gap-2">
+                                <a href="/edit/<%= book.id %>" class="p-2 text-yellow-500 hover:bg-yellow-50 rounded-lg transition" title="Edit Buku">
+                                    ✏️
+                                </a>
+                                <a href="/delete/<%= book.id %>" onclick="return confirm('Yakin hapus buku ini?')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus Buku">
+                                    🗑️
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            <% } else { %>
+                <div class="col-span-full bg-white p-12 rounded-3xl text-center border-2 border-dashed border-gray-200">
+                    <p class="text-4xl mb-4">📭</p>
+                    <h3 class="text-xl font-bold text-gray-700">Belum ada buku</h3>
+                    <p class="text-gray-500 mt-2">Silakan tambahkan buku baru melalui Dashboard.</p>
+                    <a href="/" class="inline-block mt-6 text-[#D97706] font-bold hover:underline">Tambah Buku Sekarang →</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,47 +1,48 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  # --- 1. DATABASE SERVICE ---
-  db_service:
-    image: mysql:8.0
-    container_name: db_${GROUP_NAME}
-    restart: always
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: rootpassword
-    # volumes
-    # Network
-
-  # --- 2. APP SERVICE ---
-  app_service:
+  # Service 1: Aplikasi Node.js
+  app:
     build: ./app
-    container_name: app_${GROUP_NAME}
-    restart: always
-    expose:
-      - "3000"
-    environment:
-      - DB_HOST=db_service
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
-      - APP_PORT=3000
-    depends_on:
-      - db_service
-    # Network
-
-  # --- 3. NGINX SERVICE ---
-  nginx_service:
-    image: nginx:alpine
-    container_name: nginx_${GROUP_NAME}
+    container_name: libratech_app
     restart: always
     ports:
-      - "${APP_PORT}:80"
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql_db
+      - DB_USER=user
+      - DB_PASSWORD=userpassword
+      - DB_NAME=libratech_db
     depends_on:
-      - app_service
-    # Network
-    # volumes
+      - mysql_db
 
-#--- VOLUMES AND NETWORKS ---
-# tambahkan bagian volumes dan networks di sini
+  # Service 2: Database MySQL
+  mysql_db:
+    image: mysql:5.7
+    container_name: libratech_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=libratech_db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=userpassword
+    volumes:
+      # PENTING: Agar data tidak hilang (Persistent) [cite: 128, 200]
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Service 3: Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: libratech_nginx
+    restart: always
+    ports:
+      # Akses publik lewat port 2583 sesuai aturan [cite: 194]
+      - "2583:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  db_data:

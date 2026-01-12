@@ -1,11 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Tekser</title>
-  </head>
-  <body>
-    <h1>Hello World! Silakan edit file ini.</h1>
-  </body>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraTech - Online Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        
+        /* Custom Scrollbar biar rapi */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1B4D3E; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-[url('https://images.unsplash.com/photo-1507842217121-9d59611c9eda?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center bg-fixed min-h-screen flex items-center">
+
+    <div class="absolute inset-0 bg-black/30 lg:bg-transparent pointer-events-none"></div>
+
+    <div class="relative bg-[#FDFBF7] w-full lg:w-[65%] min-h-screen lg:rounded-r-[80px] shadow-2xl overflow-y-auto py-10 px-8 lg:px-16 flex flex-col justify-center">
+        
+        <nav class="flex flex-wrap gap-6 text-sm font-bold text-gray-500 mb-10 uppercase tracking-wide">
+            <a href="/" class="text-[#1B4D3E] border-b-2 border-[#1B4D3E] pb-1">Dashboard</a>
+            <a href="/collection" class="hover:text-[#1B4D3E] transition">Koleksi Buku</a>
+            <a href="/borrowings" class="hover:text-[#1B4D3E] transition">Data Peminjaman</a>
+            <a href="/contact" class="hover:text-[#1B4D3E] transition text-orange-600">Contact Person</a>
+        </nav>
+
+        <h1 class="text-5xl lg:text-6xl font-bold text-[#1B4D3E] mb-4">
+            Online library
+        </h1>
+        <p class="text-gray-600 mb-8 max-w-lg leading-relaxed">
+            Selamat datang di Sistem Manajemen Perpustakaan Digital Kelompok C2. 
+            Kelola data buku, stok, dan peminjaman dengan mudah, cepat, dan terpercaya.
+        </p>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 mb-10">
+            <h2 class="text-xl font-bold text-[#1B4D3E] mb-4 flex items-center gap-2">
+                <span>📖</span> Tambah Koleksi Baru
+            </h2>
+            <form action="/add" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" name="title" placeholder="Judul Buku" required class="bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                <input type="text" name="author" placeholder="Penulis" required class="bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                <input type="text" name="isbn" placeholder="No. ISBN" class="bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" name="year_published" placeholder="Tahun" class="bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                    <input type="number" name="stock" placeholder="Stok" value="0" class="bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                </div>
+                <input type="text" name="category" placeholder="Kategori" class="md:col-span-2 bg-gray-50 p-3 rounded-lg border focus:ring-2 focus:ring-[#D97706] outline-none">
+                
+                <button type="submit" class="md:col-span-2 bg-[#D97706] hover:bg-[#b46105] text-white font-bold py-3 rounded-full shadow-md transition transform hover:scale-105">
+                    Simpan Buku
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-[#1B4D3E] text-white">
+                        <tr>
+                            <th class="p-4">Judul</th>
+                            <th class="p-4">Penulis</th>
+                            <th class="p-4 hidden md:table-cell">Kategori</th>
+                            <th class="p-4">Stok</th>
+                            <th class="p-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <% if(books.length > 0) { %>
+                            <% books.forEach(function(book) { %>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 font-semibold text-[#1B4D3E]"><%= book.title %></td>
+                                <td class="p-4 text-sm text-gray-600"><%= book.author %></td>
+                                <td class="p-4 hidden md:table-cell"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"><%= book.category %></span></td>
+                                <td class="p-4 font-bold"><%= book.stock %></td>
+                                <td class="p-4 flex justify-center gap-2">
+                                    <a href="/edit/<%= book.id %>" class="text-yellow-500 hover:text-yellow-600">✏️</a>
+                                    <a href="/delete/<%= book.id %>" onclick="return confirm('Hapus?')" class="text-red-500 hover:text-red-600">🗑️</a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr><td colspan="5" class="p-6 text-center text-gray-400">Belum ada buku.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-10 text-sm text-gray-400 flex items-center gap-2">
+            <span>↗</span> <span class="font-semibold">Buka situs</span> &copy; 2026 LibraTech
+        </div>
+
+    </div> </body>
 </html>

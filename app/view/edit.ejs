@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Buku - LibraTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto p-8 max-w-2xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">✏️ Edit Data Buku</h1>
+        
+        <div class="bg-white rounded shadow-lg p-6 border-t-8 border-yellow-500">
+            <form action="/update/<%= book.id %>" method="POST" class="grid grid-cols-1 gap-4">
+                
+                <div>
+                    <label class="text-gray-700 font-bold">Judul Buku</label>
+                    <input type="text" name="title" value="<%= book.title %>" required 
+                        class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                </div>
+
+                <div>
+                    <label class="text-gray-700 font-bold">Penulis</label>
+                    <input type="text" name="author" value="<%= book.author %>" required 
+                        class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-700 font-bold">ISBN</label>
+                        <input type="text" name="isbn" value="<%= book.isbn %>" 
+                            class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-700 font-bold">Tahun Terbit</label>
+                        <input type="number" name="year_published" value="<%= book.year_published %>" 
+                            class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-700 font-bold">Kategori</label>
+                        <input type="text" name="category" value="<%= book.category %>" required 
+                            class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                    <div>
+                        <label class="text-gray-700 font-bold">Stok</label>
+                        <input type="number" name="stock" value="<%= book.stock %>" required 
+                            class="mt-1 p-2 border rounded w-full focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-4">
+                    <a href="/" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">Batal</a>
+                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition">
+                        Update Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
