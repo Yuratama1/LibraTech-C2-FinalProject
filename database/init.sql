@@ -16,9 +16,10 @@ CREATE TABLE IF NOT EXISTS borrowings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     book_id INT,
     borrower_name VARCHAR(255),
-    borrower_nim VARCHAR(50),
+    borrower_nim VARCHAR(20),
     borrow_date DATE,
     return_date DATE,
+    status VARCHAR(20) DEFAULT 'Dipinjam',  -- KOLOM BARU
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
 
