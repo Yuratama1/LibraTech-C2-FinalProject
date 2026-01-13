@@ -1,6 +1,6 @@
-// TODO: Definisikan semua jalur (Route) aplikasi kalian disini (GET, POST, PUT, DELETE)const express = require('express');
+const express = require('express'); // <--- INI JANGAN SAMPAI HILANG!
 const router = express.Router();
-const db = require('../config/database'); // Mundur satu folder untuk cari config
+const db = require('../config/database');
 
 // --- 1. DASHBOARD (Halaman Utama) ---
 router.get('/', (req, res) => {
@@ -120,5 +120,4 @@ router.post('/update/:id', (req, res) => {
     });
 });
 
-// Wajib export router agar bisa dipakai di app.js
 module.exports = router;
